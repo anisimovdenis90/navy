@@ -8,11 +8,21 @@ import com.anisimov.denis.model.mapper.ShipMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ShipDaoImpl extends BaseDao implements ShipDao {
+
+    private Map<Long, Ship> shipIdentityMap;
+
+    @PostConstruct
+    public void init() {
+        shipIdentityMap = new HashMap<>();
+    }
 
     @Override
     public List<Ship> selectAllShips() {
@@ -41,11 +51,18 @@ public class ShipDaoImpl extends BaseDao implements ShipDao {
 
     @Override
     public Ship selectShipById(Long id) {
-        final String sql = "SELECT id, name, port_id, status FROM ships WHERE id=" + id;
-        try {
-            return jdbcTemplate.queryForObject(sql, new ShipMapper());
-        } catch (DataAccessException e) {
-            return null;
+        Ship ship = shipIdentityMap.get(id);
+        if (ship == null) {
+            final String sql = "SELECT id, name, port_id, status FROM ships WHERE id=" + id;
+            try {
+                ship = jdbcTemplate.queryForObject(sql, new ShipMapper());
+                shipIdentityMap.put(id, ship);
+                return ship;
+            } catch (DataAccessException e) {
+                return null;
+            }
+        } else {
+            return ship;
         }
     }
 
