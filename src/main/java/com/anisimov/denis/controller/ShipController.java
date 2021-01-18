@@ -49,33 +49,137 @@ public class ShipController {
     }
     // 200, 404, 500
     @GetMapping("/{id}")
-    public ResponseEntity<Ship> getShipById (@PathVariable(value = "id") Long shipId) {
+    @ApiOperation(
+            value = "Получить корабль с указанным id",
+            httpMethod = "GET",
+            produces = "application/json",
+            response = Ship.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Неверный id"),
+            @ApiResponse(code = 404, message = "Нет корабля с указанным id"),
+            @ApiResponse(code = 500, message = "Внутренняя ошибка")
+    })
+    public ResponseEntity<Ship> getShipById(
+            @ApiParam(
+                    value = "id корабля",
+                    required = true,
+                    name = "id",
+                    example = "1"
+            )
+            @PathVariable(value = "id") Long shipId
+    ) {
         return shipService.readShipById(shipId);
     }
 
     // 200, 400, 404, 422, 500
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<String> postShip(@RequestBody Ship ship) {
+    @ApiOperation(
+            value = "Сохранить новый корабль",
+            httpMethod = "POST",
+            produces = "application/json",
+            consumes = "application/json",
+            response = String.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 422, message = "Нет места для сохранения в указанном порту"),
+            @ApiResponse(code = 500, message = "Внутренняя ошибка")
+    })
+    public ResponseEntity<String> postShip(
+            @ApiParam(
+                    value = "Объект корабля",
+                    required = true
+            )
+            @RequestBody Ship ship
+    ) {
         return shipService.createShip(ship);
     }
 
     // 200, 404, 500
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteShip(@PathVariable(value = "id") Long shipId) {
+    @ApiOperation(
+            value = "Удалить корабль с указанным id",
+            httpMethod = "DELETE",
+            produces = "application/json",
+            response = String.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Нет корабля с указанным id"),
+            @ApiResponse(code = 500, message = "Внутренняя ошибка")
+    })
+    public ResponseEntity<String> deleteShip(
+            @ApiParam(
+                    value = "id корабля",
+                    required = true,
+                    name = "id",
+                    example = "1"
+            )
+            @PathVariable(value = "id") Long shipId
+    ) {
         return shipService.deleteShip(shipId);
     }
 
     // 200, 404, 500
     @GetMapping("/{id}/status")
-    public ResponseEntity<ShipStatus> getShipStatus (@PathVariable(value = "id") Long shipId) {
+    @ApiOperation(
+            value = "Получить корабли с указанным id",
+            httpMethod = "GET",
+            produces = "application/json",
+            response = Ship.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Нет корабля с указанным id"),
+            @ApiResponse(code = 500, message = "Внутренняя ошибка")
+    })
+    public ResponseEntity<ShipStatus> getShipStatus(
+            @ApiParam(
+                    value = "id корабля",
+                    required = true,
+                    name = "id",
+                    example = "1"
+            )
+            @PathVariable(value = "id") Long shipId
+    ) {
         return shipService.readShipStatus(shipId);
     }
 
     // 200, 400, 404, 422, 500
     @PutMapping("/{id}/status")
+    @ApiOperation(
+            value = "Изменить статус корабля с указанным id",
+            httpMethod = "PUT",
+            produces = "application/json",
+            consumes = "application/json",
+            response = ShipStatus.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Неверные параметры"),
+            @ApiResponse(code = 404, message = "Неверный id порта"),
+            @ApiResponse(code = 422, message = "В указанном порту нет места"),
+            @ApiResponse(code = 500, message = "Внутренняя ошибка")
+    })
     public ResponseEntity<ShipStatus> putShipStatus(
+            @ApiParam(
+                    value = "id корабля",
+                    required = true,
+                    name = "id",
+                    example = "1"
+            )
             @PathVariable(value = "id") Long shipId,
+            @ApiParam(
+                    value = "id порта",
+                    name = "port_id",
+                    example = "1"
+            )
             @RequestParam(value = "port_id", required = false) Long portId,
+            @ApiParam(
+                    value = "новый статус корабля"
+            )
             @RequestBody ShipStatus status
     ) {
         return shipService.updateShipStatus(shipId, portId, status);

@@ -93,7 +93,7 @@ public class ShipServiceImpl implements ShipService {
         if (ship == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        ShipStatusType shipStatusType = ShipStatusType.getStatusTyoe(status.getStatus());
+        final ShipStatusType shipStatusType = ShipStatusType.getStatusTyoe(status.getStatus());
         if (shipStatusType == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -127,7 +127,7 @@ public class ShipServiceImpl implements ShipService {
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        ShipStatus newShipStatus = new ShipStatus();
+        final ShipStatus newShipStatus = new ShipStatus();
         newShipStatus.setStatus(ship.getStatus().name());
         return ResponseEntity.ok(newShipStatus);
     }
@@ -139,7 +139,7 @@ public class ShipServiceImpl implements ShipService {
         }
         final Ship ship = shipDao.selectShipById(shipId);
         if (ship == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(ship);
     }

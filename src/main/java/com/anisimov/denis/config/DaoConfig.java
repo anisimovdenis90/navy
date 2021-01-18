@@ -11,13 +11,22 @@ import javax.sql.DataSource;
 @Configuration
 public class DaoConfig {
 
+    @Value("${dataSource.driver}")
+    private String driver;
+    @Value("${dataSource.url}")
+    private String url;
+    @Value("${dataSource.username}")
+    private String username;
+    @Value("${dataSource.password}")
+    private String password;
+
     @Bean
     public DataSource dataSource() {
         final HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/navy?serverTimezone=Europe/Moscow&amp&useSSL=false");
-        dataSource.setUsername("root");
-        dataSource.setPassword("gtr120519");
+        dataSource.setDriverClassName(driver);
+        dataSource.setJdbcUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
